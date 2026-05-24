@@ -1,0 +1,482 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>隐水洞 · 洞天华中</title>
+    <!-- 引入 Swiper CSS（轮播样式） -->
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+            background: #0a121f;
+            color: #d6e4f0;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            /* 模拟 H5 长页面滑动感 */
+        }
+
+        /* 主容器 – 模拟移动端竖屏卡片流 */
+        .h5-container {
+            max-width: 450px;
+            margin: 0 auto;
+            background: #0b1722;
+            box-shadow: 0 0 60px rgba(0, 160, 255, 0.15);
+            min-height: 100vh;
+        }
+
+        /* 通用区块 */
+        .section {
+            padding: 2.2rem 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            margin-bottom: 1.2rem;
+            color: #f0f9ff;
+            border-left: 5px solid #38bdf8;
+            padding-left: 1rem;
+        }
+
+        .section-desc {
+            font-size: 0.95rem;
+            color: #b0c9e0;
+            margin-bottom: 1.8rem;
+        }
+
+        /* ---- 1. 首屏大图 ---- */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 80vh;
+            max-height: 750px;
+            background: linear-gradient(180deg, rgba(2, 20, 38, 0.4) 0%, rgba(4, 30, 50, 0.7) 100%),
+            url('https://images.unsplash.com/photo-1590073242678-70ee3fc28e8e?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 30% 40%, rgba(56, 189, 248, 0.25), transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: 0.18em;
+            color: #ffffff;
+            text-shadow: 0 6px 24px rgba(0, 160, 255, 0.7);
+            z-index: 2;
+            margin-bottom: 0.25rem;
+        }
+
+        .hero .subtitle {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: #cbddec;
+            letter-spacing: 0.3em;
+            z-index: 2;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 0.3rem 1.8rem;
+            border-radius: 40px;
+            backdrop-filter: blur(8px);
+            margin-top: 0.5rem;
+        }
+
+        .hero .badge-row {
+            z-index: 2;
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1.8rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .badge {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            padding: 0.3rem 1.3rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #f0f9ff;
+            letter-spacing: 0.05em;
+        }
+
+        /* ---- 2. 数字亮点条 ---- */
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: #0f2538;
+            padding: 1.5rem 0.8rem;
+            margin: -1rem 1rem 1.5rem 1rem;
+            border-radius: 28px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
+            position: relative;
+            z-index: 5;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #38bdf8;
+        }
+        .stat-label {
+            font-size: 0.7rem;
+            color: #9bb7d4;
+            letter-spacing: 0.1em;
+        }
+
+        /* ---- 3. 卡片风格 ---- */
+        .card {
+            background: #102433;
+            border-radius: 28px;
+            padding: 1.5rem;
+            margin-bottom: 1.8rem;
+            border: 1px solid rgba(56, 189, 248, 0.18);
+            box-shadow: 0 12px 24px rgba(0, 20, 40, 0.7);
+            backdrop-filter: blur(4px);
+            transition: transform 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(56, 189, 248, 0.4);
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #e0f2fe;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        /* 三游特色图标区 */
+        .feature-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            margin-top: 1rem;
+        }
+        .feature-item {
+            flex: 1 1 100px;
+            background: #0c1d2e;
+            border-radius: 20px;
+            padding: 1.2rem 0.5rem;
+            text-align: center;
+            border: 1px solid #1e405b;
+        }
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 0.4rem;
+        }
+        .feature-item strong {
+            display: block;
+            color: #f0f9ff;
+            font-size: 1rem;
+        }
+
+        /* 景点列表 */
+        .attraction-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        .attraction-tag {
+            background: #1a3550;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #b9dcff;
+            border: 1px solid #2e577b;
+        }
+
+        /* ---- 4. 视频占位 / 模拟封面 ---- */
+        .video-placeholder {
+            background: #071926;
+            border-radius: 24px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7fa3c2;
+            font-size: 1rem;
+            border: 1px dashed #2e577b;
+            margin: 1rem 0;
+            cursor: pointer;
+            transition: 0.2s;
+            background-image: url('https://images.unsplash.com/photo-1533106497176-45ae19e68ba2?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .video-placeholder::after {
+            content: "▶ 播放隐水洞宣传片";
+            position: absolute;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(6px);
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* 预约按钮 */
+        .btn-primary {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, #0284c7, #38bdf8);
+            border: none;
+            border-radius: 40px;
+            padding: 1rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 8px 22px rgba(2, 132, 199, 0.5);
+            margin: 1.4rem 0 0.5rem;
+            text-align: center;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0369a1, #0ea5e9);
+            box-shadow: 0 12px 28px rgba(2, 132, 199, 0.7);
+            transform: scale(1.01);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #97b9da;
+            margin-top: 0.3rem;
+        }
+
+        hr {
+            border-color: rgba(56, 189, 248, 0.2);
+            margin: 1.5rem 0 1rem;
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #4b6589;
+            padding: 2rem 1rem 1.5rem;
+        }
+
+        /* swiper 自定义 */
+        .swiper {
+            width: 100%;
+            border-radius: 24px;
+            margin: 1rem 0;
+        }
+        .swiper-slide img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 24px;
+        }
+    </style>
+</head>
+<body>
+<div class="h5-container">
+
+    <!-- 首屏 -->
+    <div class="hero">
+        <h1>隐水洞</h1>
+        <div class="subtitle">洞天华中 · 中华天洞</div>
+        <div class="badge-row">
+            <span class="badge">📍 湖北 · 咸宁 · 通山</span>
+            <span class="badge">🏆 国家AAAA · 地质公园</span>
+            <span class="badge">🌡️ 恒温 18℃</span>
+        </div>
+    </div>
+
+    <!-- 数据亮点 -->
+    <div class="stats">
+        <div class="stat-item">
+            <div class="stat-number">5180<span style="font-size:0.9rem;">m</span></div>
+            <div class="stat-label">全长</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">5<span style="font-size:0.9rem;">亿年</span></div>
+            <div class="stat-label">母岩年龄</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">18<span style="font-size:0.9rem;">℃</span></div>
+            <div class="stat-label">洞内恒温</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">3<span style="font-size:0.9rem;">段</span></div>
+            <div class="stat-label">一洞三游</div>
+        </div>
+    </div>
+
+    <!-- 景区简介 -->
+    <div class="section">
+        <div class="section-title">🌊 隐水 · 秘境</div>
+        <div class="section-desc">
+            隐水洞位于湖北省咸宁市通山县大畈镇隐水村，富水湖畔、九宫山下，是国家AAAA级旅游景区和湖北省首个国家地质公园。洞穴全长<b>5180米</b>，母岩为距今约<b>5亿年</b>的寒武系碳酸盐岩，经百万年岩溶作用形成巨型地下溶洞系统[reference:0]。
+        </div>
+        <div class="card">
+            <h3>💧 因水得名</h3>
+            <p style="color:#b0c9e0; font-size:0.9rem;">隐水洞因洞中隐藏有两条地下河流而得名，兼备现代地下河与古河道景观，在已开发的地下河洞穴中结构独特、品质极高[reference:1]。</p>
+        </div>
+    </div>
+
+    <!-- 图片轮播 -->
+    <div class="section" style="padding-top:0;">
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1590073242678-70ee3fc28e8e?q=80&w=800&auto=format&fit=crop" alt="隐水洞景观1"></div>
+                <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1533106497176-45ae19e68ba2?q=80&w=800&auto=format&fit=crop" alt="隐水洞景观2"></div>
+                <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1506377246177-eb161e9e1f7f?q=80&w=800&auto=format&fit=crop" alt="隐水洞钟乳石"></div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+
+    <!-- 核心卖点：一洞三游 -->
+    <div class="section">
+        <div class="section-title">🚣 亚洲首创 · 一洞三游</div>
+        <div class="section-desc">
+            隐水洞独创“上游乘船、中游火车、下游徒步”的三段式游览体系，被认定为亚洲首创游览模式[reference:2]。
+        </div>
+        <div class="feature-grid">
+            <div class="feature-item">
+                <div class="feature-icon">🛶</div>
+                <strong>上游乘船</strong>
+                <p style="font-size:0.7rem; color:#86a8cc;">泛舟地下暗河</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🚂</div>
+                <strong>中游火车</strong>
+                <p style="font-size:0.7rem; color:#86a8cc;">复古小火车穿梭</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🚶</div>
+                <strong>下游徒步</strong>
+                <p style="font-size:0.7rem; color:#86a8cc;">零距离触摸亿年奇观</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 核心景点 -->
+    <div class="section">
+        <div class="section-title">⭐ 洞内奇观</div>
+        <div class="attraction-list">
+            <span class="attraction-tag">鲤鱼跃龙门</span>
+            <span class="attraction-tag">天降神靴</span>
+            <span class="attraction-tag">玉兔观桃</span>
+            <span class="attraction-tag">天鹅之吻</span>
+            <span class="attraction-tag">金银瀑布</span>
+            <span class="attraction-tag">仙人田</span>
+            <span class="attraction-tag">马良神笔</span>
+            <span class="attraction-tag">水生石莲</span>
+            <span class="attraction-tag">龙宫穹顶</span>
+        </div>
+    </div>
+
+    <!-- 宣传视频模拟 -->
+    <div class="section">
+        <div class="video-placeholder" onclick="alert('🎬 宣传片播放（演示交互）')"></div>
+        <p style="font-size:0.75rem; color:#5c7995; text-align:center; margin-top:0.3rem;">点击观看隐水洞宣传视频</p>
+    </div>
+
+    <!-- 实用信息 & 预约 -->
+    <div class="section">
+        <div class="section-title">🎫 游览须知</div>
+        <div class="card">
+            <div class="info-row">
+                <span>🕒 开放时间</span> <strong>8:30 - 16:30</strong>
+            </div>
+            <div class="info-row" style="margin-top:0.5rem;">
+                <span>⏳ 建议游玩</span> <strong>2 - 3 小时</strong>
+            </div>
+            <div class="info-row" style="margin-top:0.5rem;">
+                <span>💰 门票参考</span> <strong>107 - 125 元</strong>
+            </div>
+            <div class="info-row" style="margin-top:0.5rem;">
+                <span>🎟️ 包含</span> <strong>游船 + 小火车</strong>
+            </div>
+            <hr>
+            <div class="info-row">
+                <span>📍 地址</span> <strong>咸宁市通山县大畈镇隐水村</strong>
+            </div>
+            <div class="info-row" style="margin-top:0.5rem;">
+                <span>📞 咨询</span> <strong>0715-2750888</strong>
+            </div>
+
+            <!-- 模拟预约按钮 -->
+            <div class="btn-primary" onclick="alert('🔔 跳转至官方票务平台（演示交互）')">
+                🎟️ 立即预约 / 购票
+            </div>
+            <p style="font-size:0.7rem; color:#4d6d8c; text-align:center; margin-top:0.8rem;">
+                * 线上预订更优惠 · 建议提前预约
+            </p>
+        </div>
+    </div>
+
+    <!-- 交通提示 -->
+    <div class="section" style="padding-top:0;">
+        <div class="card">
+            <h3>🚗 交通指南</h3>
+            <p style="color:#b0c9e0; font-size:0.85rem;">🚙 自驾：导航“通山隐水洞景区”，武汉出发约2.5小时，杭瑞高速隐水洞出口200米即达。</p>
+            <p style="color:#b0c9e0; font-size:0.85rem; margin-top:0.5rem;">🚄 高铁：咸宁北站下车，打车/换乘前往景区。</p>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer-note">
+        © 隐水洞地质公园 · 洞天华中 · 中华天洞<br> 本页面为景区宣传展示 H5
+    </div>
+</div>
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+    /* 初始化轮播图 */
+    const swiper = new Swiper('.mySwiper', {
+        loop: true,
+        autoplay: {
+            delay: 3500,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        effect: 'coverflow',
+        grabCursor: true,
+    });
+</script>
+</body>
+</html>
